@@ -23,6 +23,7 @@
 	"sideEffects": [
 		"**/*.css"
 	],
+	"description": "an Ant Design component library for the rest of us",
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
@@ -68,7 +69,9 @@
 		"vitest": "^3.0.9"
 	},
 	"keywords": [
-		"svelte"
+		"svelte",
+		"ant",
+		"design"
 	],
 	"pnpm": {
 		"onlyBuiltDependencies": [
