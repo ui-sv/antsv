@@ -20,7 +20,7 @@
 	});
 </script>
 
-{unload}WJnsYAjsyYe4L4s
+{unload}
 
 <div class="flex flex-wrap gap-2 p-4">
 	<Button>default button</Button>
