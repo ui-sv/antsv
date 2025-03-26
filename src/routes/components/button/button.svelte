@@ -2,6 +2,7 @@
 	import { type Classes, isSnippet } from '$lib/index.js';
 	import type { Component, Snippet } from 'svelte';
 	import { LoadingOutlined } from 'svelte-ant-design-icons';
+	import { Tween } from 'svelte/motion';
 
 	type Size = 'default' | 'small' | 'large';
 	type Type = 'primary' | 'default' | 'dashed' | 'link' | 'text';
@@ -37,6 +38,7 @@
 		loading = false,
 		ghost = false,
 		disabled = false,
+		danger = false,
 		shape = 'default',
 		size = 'default',
 		class: klass,
@@ -61,6 +63,30 @@
 		text: ['hover:(bg-zinc-200)', 'active:(bg-zinc-300)']
 	};
 
+	const danger_types: Classes<Type> = {
+		dashed: [
+			'border border-dashed border-red-500 text-red-500',
+			'hover:(border-red-400 text-red-400)',
+			'active:(border-red-600 text-red-600)'
+		],
+		link: ['text-red-500', 'hover:(text-red-400)', 'active:(text-red-600)'],
+		primary: ['bg-red-500 text-white', 'hover:(bg-red-400)', 'active:(bg-red-600)'],
+		default: [
+			'bg-white text-red-500 border border-red-500 shadow-md shadow-red-900/2',
+			'hover:(border-red-400 text-red-400)',
+			'active:(border-red-600 text-red-600)'
+		],
+		text: ['text-red-500', 'hover:(bg-red-50)', 'active:(bg-red-200)']
+	};
+
+	const disabled_types: Classes<Type> = {
+		dashed: ['border border-dashed border-zinc-300 text-zinc-400 bg-zinc-100'],
+		link: ['text-zinc-400'],
+		primary: ['bg-zinc-100 text-zinc-400 border border-zinc-300 shadow-md shadow-blue-900/2'],
+		default: ['bg-zinc-100 text-zinc-400 border border-zinc-300  shadow-md shadow-red-900/2'],
+		text: ['text-zinc-400']
+	};
+
 	const sizes: Classes<Size> = {
 		default: 'h-8 text-sm',
 		small: 'h-6 text-xs',
@@ -72,19 +98,32 @@
 		small: 'px-1.5 gap-1.5',
 		large: 'px-3 gap-2'
 	};
+
+	const padding_left = new Tween(size === 'small' ? 0.5 : 0.75, { duration: 150 });
+
+	$effect(() => {
+		if (icon) return;
+		if (!children || !loading) {
+			padding_left.target = size === 'small' ? 0.5 : 0.75;
+			return;
+		}
+
+		padding_left.target = 2;
+	});
 </script>
 
 <svelte:element
 	this={href ? 'a' : 'button'}
 	class={[
 		'transition flex items-center relative',
-		types[type],
+		disabled ? disabled_types[type] : danger ? danger_types[type] : types[type],
 		sizes[size],
 		icon_position === 'end' && 'flex-row-reverse',
 		icon && !children ? 'aspect-square justify-center px-0' : spacing[size],
 		shape === 'default' ? 'rounded-md' : 'rounded-full',
 		shape === 'circle' && 'aspect-square px-0',
 		loading && 'cursor-wait',
+		disabled && 'cursor-not-allowed',
 		klass
 	]}
 	role={html_type}
@@ -95,6 +134,7 @@
 		if (loading || disabled) return;
 		onclick(e);
 	}}
+	style:padding-left="{!icon || (!!icon && children) ? padding_left.current : 0}rem"
 	{...props}
 >
 	{#if icon}
@@ -108,24 +148,21 @@
 				{/if}
 			</span>
 
-			<LoadingOutlined
-				class={['absolute animate-spin size-4 transition', loading ? '' : 'opacity-0']}
-			/>
+			{@render throbber()}
 		</span>
 	{/if}
 
-	{#if !icon && loading}
-		<span
-			class={[
-				'absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2',
-				icon_position === 'start' ? 'left-4' : 'right-4'
-			]}
-		>
-			<LoadingOutlined class="animate-spin size-4" />
-		</span>
+	{#if !icon}
+		{@render throbber('left-2')}
 	{/if}
 
 	{#if children}
 		{@render children()}
 	{/if}
 </svelte:element>
+
+{#snippet throbber(c?: string)}
+	<LoadingOutlined
+		class={['absolute animate-spin size-4 pointer-events-none', loading ? '' : 'opacity-0', c]}
+	/>
+{/snippet}

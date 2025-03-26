@@ -2,7 +2,7 @@
 	import Button from './button.svelte';
 	import { SearchOutlined, DownloadOutlined } from 'svelte-ant-design-icons';
 
-	let loading = $state([false, false]);
+	let loading = $state([]);
 	let unload = $state<number[]>([]);
 	const load = (idx: number) => (loading[idx] = true);
 
@@ -14,13 +14,11 @@
 
 			setTimeout(() => {
 				loading[idx] = false;
-				unload.pop();
+				unload.shift();
 			}, 2500);
 		}
 	});
 </script>
-
-{unload}
 
 <div class="flex flex-wrap gap-2 p-4">
 	<Button>default button</Button>
@@ -42,27 +40,6 @@
 	<Button icon={SearchOutlined} shape="circle" type="dashed" />
 	<Button shape="circle" type="dashed">A</Button>
 	<Button icon={SearchOutlined} type="dashed">Search</Button>
-</div>
-
-<div class="flex flex-wrap gap-2 p-4">
-	<Button icon={DownloadOutlined} type="primary" size="small" />
-	<Button icon={DownloadOutlined} type="primary" size="small" shape="circle" />
-	<Button icon={DownloadOutlined} type="primary" size="small" shape="round">Download</Button>
-	<Button icon={DownloadOutlined} type="primary" size="small">Download</Button>
-</div>
-
-<div class="flex flex-wrap gap-2 p-4">
-	<Button icon={DownloadOutlined} type="primary" />
-	<Button icon={DownloadOutlined} type="primary" shape="circle" />
-	<Button icon={DownloadOutlined} type="primary" shape="round">Download</Button>
-	<Button icon={DownloadOutlined} type="primary">Download</Button>
-</div>
-
-<div class="flex flex-wrap gap-2 p-4">
-	<Button icon={DownloadOutlined} type="primary" size="large" />
-	<Button icon={DownloadOutlined} type="primary" size="large" shape="circle" />
-	<Button icon={DownloadOutlined} type="primary" size="large" shape="round">Download</Button>
-	<Button icon={DownloadOutlined} type="primary" size="large">Download</Button>
 </div>
 
 <div class="flex flex-wrap gap-2 p-4">
@@ -100,22 +77,105 @@
 	>
 		Download
 	</Button>
+	<Button loading={loading[0]} type="primary" size="small" onclick={() => load(0)}>Download</Button>
 </div>
 
 <div class="flex flex-wrap gap-2 p-4">
-	<Button loading={loading[0]} icon={DownloadOutlined} type="primary" />
-	<Button loading={loading[0]} icon={DownloadOutlined} type="primary" shape="circle" />
-	<Button loading={loading[0]} icon={DownloadOutlined} type="primary" shape="round">
+	<Button loading={loading[1]} icon={DownloadOutlined} type="primary" onclick={() => load(1)} />
+	<Button
+		loading={loading[1]}
+		icon={DownloadOutlined}
+		type="primary"
+		shape="circle"
+		onclick={() => load(1)}
+	/>
+	<Button
+		loading={loading[1]}
+		icon={DownloadOutlined}
+		type="primary"
+		shape="round"
+		onclick={() => load(1)}
+	>
 		Download
 	</Button>
-	<Button loading={loading[0]} icon={DownloadOutlined} type="primary">Download</Button>
+	<Button loading={loading[1]} icon={DownloadOutlined} type="primary" onclick={() => load(1)}>
+		Download
+	</Button>
+	<Button loading={loading[1]} type="primary" onclick={() => load(1)}>Download</Button>
 </div>
 
 <div class="flex flex-wrap gap-2 p-4">
-	<Button loading icon={DownloadOutlined} type="primary" size="large" />
-	<Button loading icon={DownloadOutlined} type="primary" size="large" shape="circle" />
-	<Button loading icon={DownloadOutlined} type="primary" size="large" shape="round">
+	<Button
+		loading={loading[2]}
+		icon={DownloadOutlined}
+		type="primary"
+		size="large"
+		onclick={() => load(2)}
+	/>
+	<Button
+		loading={loading[2]}
+		icon={DownloadOutlined}
+		type="primary"
+		size="large"
+		shape="circle"
+		onclick={() => load(2)}
+	/>
+	<Button
+		loading={loading[2]}
+		icon={DownloadOutlined}
+		type="primary"
+		size="large"
+		shape="round"
+		onclick={() => load(2)}
+	>
 		Download
 	</Button>
-	<Button loading icon={DownloadOutlined} type="primary" size="large">Download</Button>
+	<Button
+		loading={loading[2]}
+		icon={DownloadOutlined}
+		type="primary"
+		size="large"
+		onclick={() => load(2)}
+	>
+		Download
+	</Button>
+	<Button loading={loading[2]} type="primary" size="large" onclick={() => load(2)}>Download</Button>
+</div>
+
+<!-- DANGER -->
+
+<div class="flex flex-wrap gap-2 p-4">
+	<Button danger>default button</Button>
+	<Button danger type="primary">primary button</Button>
+	<Button danger type="dashed">dashed button</Button>
+	<Button danger type="text">text button</Button>
+	<Button danger type="link">link button</Button>
+</div>
+
+<div class="flex flex-wrap gap-2 p-4">
+	<Button loading={loading[3]} icon={DownloadOutlined} danger onclick={() => load(3)} />
+	<Button
+		loading={loading[3]}
+		icon={DownloadOutlined}
+		shape="circle"
+		danger
+		onclick={() => load(3)}
+	/>
+	<Button loading={loading[3]} icon={DownloadOutlined} shape="round" danger onclick={() => load(3)}>
+		Download
+	</Button>
+	<Button loading={loading[3]} icon={DownloadOutlined} danger onclick={() => load(3)}>
+		Download
+	</Button>
+	<Button loading={loading[3]} type="primary" danger onclick={() => load(3)}>Download</Button>
+</div>
+
+<!-- DISABLED -->
+
+<div class="flex flex-wrap gap-2 p-4">
+	<Button disabled>default button</Button>
+	<Button disabled type="primary">primary button</Button>
+	<Button disabled type="dashed">dashed button</Button>
+	<Button disabled type="text">text button</Button>
+	<Button disabled type="link">link button</Button>
 </div>

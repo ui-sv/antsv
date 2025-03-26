@@ -23,6 +23,11 @@
 	"sideEffects": [
 		"**/*.css"
 	],
+	"homepage": "https://github.com/ui-sv/antsv",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ui-sv/antsv"
+	},
 	"description": "an Ant Design component library for the rest of us",
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
