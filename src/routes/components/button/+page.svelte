@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Button from './button.svelte';
+	import { Button } from '$lib/index.js';
 	import { SearchOutlined, DownloadOutlined } from 'svelte-ant-design-icons';
 
-	let loading = $state([]);
+	let loading = $state<boolean[]>([]);
 	let unload = $state<number[]>([]);
 	const load = (idx: number) => (loading[idx] = true);
 

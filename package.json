@@ -1,6 +1,6 @@
 {
 	"name": "antsv",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -25,8 +25,7 @@
 	],
 	"homepage": "https://github.com/ui-sv/antsv",
 	"repository": {
-		"type": "git",
-		"url": "https://github.com/ui-sv/antsv"
+		"url": "git+https://github.com/ui-sv/antsv.git"
 	},
 	"description": "an Ant Design component library for the rest of us",
 	"svelte": "./dist/index.js",
@@ -46,6 +45,7 @@
 		"@eslint/js": "^9.23.0",
 		"@playwright/test": "^1.51.1",
 		"@sveltejs/adapter-auto": "^5.0.0",
+		"@sveltejs/adapter-cloudflare": "^6.0.1",
 		"@sveltejs/kit": "^2.20.2",
 		"@sveltejs/package": "^2.3.10",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
