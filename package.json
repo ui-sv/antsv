@@ -23,7 +23,7 @@
 	"sideEffects": [
 		"**/*.css"
 	],
-	"homepage": "https://github.com/ui-sv/antsv",
+	"homepage": "https://antsv.pages.dev",
 	"repository": {
 		"url": "git+https://github.com/ui-sv/antsv.git"
 	},
