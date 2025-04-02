@@ -2,6 +2,7 @@
 	import { type Classes, isSnippet } from '$lib/index.js';
 	import type { Component, Snippet } from 'svelte';
 	import { LoadingOutlined } from 'svelte-ant-design-icons';
+	import type { ClassValue } from 'svelte/elements';
 	import { Tween } from 'svelte/motion';
 
 	type Size = 'default' | 'small' | 'large';
@@ -24,7 +25,7 @@
 		'html-type'?: HTMLType;
 		size?: Size;
 		shape?: Shape;
-		class?: string | string[];
+		class?: ClassValue;
 		onclick?: (event: MouseEvent) => void;
 	};
 
@@ -163,6 +164,6 @@
 
 {#snippet throbber(c?: string)}
 	<LoadingOutlined
-		class={['absolute animate-spin size-4 pointer-events-none', loading ? '' : 'opacity-0', c]}
+		class={['absolute size-4 pointer-events-none', loading ? 'animate-spin' : 'opacity-0', c]}
 	/>
 {/snippet}
