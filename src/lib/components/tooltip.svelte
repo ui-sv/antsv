@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import Button, { type Props as ButtonProps } from '$lib/components/button.svelte';
 	import { Tooltip } from 'bits-ui';
 	import { isSnippet } from '$lib/index.js';
 	import type { ClassValue } from 'svelte/elements';
@@ -16,11 +17,13 @@
 		color?: string;
 		'destroy-on-hide'?: boolean;
 		container?: HTMLElement;
-		children?: Snippet;
+		children: Snippet;
 		'leave-delay'?: number;
 		'enter-delay'?: number;
 		class?: ClassValue;
 		trigger?: Trigger;
+		type?: 'button';
+		button?: ButtonProps;
 	};
 
 	const {
@@ -34,17 +37,27 @@
 		color,
 		container,
 		class: klass,
-		trigger = 'hover'
+		trigger = 'hover',
+		button: btn_prop,
+		type
 	}: Props = $props();
 </script>
 
 <Tooltip.Provider>
 	<Tooltip.Root>
-		<Tooltip.Trigger>
-			{#snippet child({ props })}  
-				{@render children?.()}
-			{/snippet}
-		</Tooltip.Trigger>
+		{#if type !== 'button'}
+			<Tooltip.Trigger>
+				{@render children()}
+			</Tooltip.Trigger>
+		{:else}
+			<Tooltip.Trigger>
+				{#snippet child({ props })}
+					<Button {...{ ...props, type: undefined }} {...btn_prop}>
+						{@render children()}
+					</Button>
+				{/snippet}
+			</Tooltip.Trigger>
+		{/if}
 
 		<Tooltip.Portal>
 			<Tooltip.Content class={[]}>

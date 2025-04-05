@@ -11,7 +11,7 @@
 	type HTMLType = 'submit' | 'reset' | 'button';
 	type Shape = 'default' | 'circle' | 'round';
 
-	type Props = {
+	export type Props = {
 		children?: Snippet;
 		href?: string;
 		target?: string;
