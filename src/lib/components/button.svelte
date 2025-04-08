@@ -1,33 +1,16 @@
 <script lang="ts">
 	import { type Classes, isSnippet } from '$lib/index.js';
-	import type { Component, Snippet } from 'svelte';
 	import { LoadingOutlined } from 'svelte-ant-design-icons';
-	import type { ClassValue } from 'svelte/elements';
+	import type {
+		ButtonSize,
+		ButtonType,
+		ButtonProps,
+		ButtonShape,
+		ButtonHTMLType,
+		ButtonIconPosition
+	} from './types.js';
 	import { Tween } from 'svelte/motion';
-
-	type Size = 'default' | 'small' | 'large';
-	type Type = 'primary' | 'default' | 'dashed' | 'link' | 'text';
-	type IconPosition = 'start' | 'end';
-	type HTMLType = 'submit' | 'reset' | 'button';
-	type Shape = 'default' | 'circle' | 'round';
-
-	export type Props = {
-		children?: Snippet;
-		href?: string;
-		target?: string;
-		type?: Type;
-		danger?: boolean;
-		disabled?: boolean;
-		ghost?: boolean;
-		loading?: boolean;
-		icon?: Snippet | Component;
-		'icon-position'?: IconPosition;
-		'html-type'?: HTMLType;
-		size?: Size;
-		shape?: Shape;
-		class?: ClassValue;
-		onclick?: (event: MouseEvent) => void;
-	};
+	import { getSpaceContext } from './contexts.js';
 
 	let {
 		children,
@@ -46,9 +29,13 @@
 		'html-type': html_type = 'button',
 		onclick = () => {},
 		...props
-	}: Props = $props();
+	}: ButtonProps = $props();
+	const id = $props.id();
+	let space_context = getSpaceContext();
 
-	const types: Classes<Type> = {
+	space_context.items = [...space_context.items, id];
+
+	const types: Classes<ButtonType> = {
 		dashed: [
 			'border border-dashed border-zinc-300',
 			'hover:(border-blue-500 text-blue-500)',
@@ -64,7 +51,7 @@
 		text: ['hover:(bg-zinc-200)', 'active:(bg-zinc-300)']
 	};
 
-	const danger_types: Classes<Type> = {
+	const danger_types: Classes<ButtonType> = {
 		dashed: [
 			'border border-dashed border-red-500 text-red-500',
 			'hover:(border-red-400 text-red-400)',
@@ -80,7 +67,7 @@
 		text: ['text-red-500', 'hover:(bg-red-50)', 'active:(bg-red-200)']
 	};
 
-	const disabled_types: Classes<Type> = {
+	const disabled_types: Classes<ButtonType> = {
 		dashed: ['border border-dashed border-zinc-300 text-zinc-400 bg-zinc-100'],
 		link: ['text-zinc-400'],
 		primary: ['bg-zinc-100 text-zinc-400 border border-zinc-300 shadow-md shadow-blue-900/2'],
@@ -88,19 +75,20 @@
 		text: ['text-zinc-400']
 	};
 
-	const sizes: Classes<Size> = {
+	const sizes: Classes<ButtonSize> = {
 		default: 'h-8 text-sm',
 		small: 'h-6 text-xs',
 		large: 'h-10'
 	};
 
-	const spacing: Classes<Size> = {
+	const spacing: Classes<ButtonSize> = {
 		default: 'px-3 gap-2',
 		small: 'px-1.5 gap-1.5',
 		large: 'px-3 gap-2'
 	};
 
 	const padding_left = new Tween(size === 'small' ? 0.5 : 0.75, { duration: 150 });
+	const space_position = $derived(space_context.items.indexOf(id));
 
 	$effect(() => {
 		if (icon) return;
@@ -125,7 +113,9 @@
 		shape === 'circle' && 'aspect-square px-0',
 		loading && 'cursor-wait',
 		disabled && 'cursor-not-allowed',
-		klass
+		klass,
+		space_position < 1 ? 'rounded-r-0' : 'rounded-0',
+		space_position === space_context.items.length ? 'rounded-l-0' : ''
 	]}
 	role={html_type}
 	type={html_type}

@@ -1,37 +1,39 @@
 <script lang="ts">
 	import type { Classes } from '$lib/index.js';
-	import type { Component, Snippet } from 'svelte';
+	import { setContext } from 'svelte';
+	import type { SpaceProps, SpaceSize, SpaceAlign, SpaceDirection } from './types.js';
+	import { setSpaceContext } from './contexts.js';
 
-	type Align = 'start' | 'end' | 'center' | 'baseline';
-	type Direction = 'vertical' | 'horizontal';
-	type Size = 'small' | 'medium' | 'large' | number;
-
-	type Props = {
-		align?: Align;
-		direction?: Direction;
-		size?: Size | [number, number];
-		split?: Snippet | Component | string;
-		wrap?: boolean;
-		children?: Snippet;
-	};
-
-	const {
+	let {
 		align,
+		split,
+		children,
 		direction = 'horizontal',
 		size = 'small',
-		split,
 		wrap = false,
-		children
-	}: Props = $props();
+		compact = false
+	}: SpaceProps = $props();
+	const id = $props.id();
 
-	const alignments: Classes<Align> = {
+	let context = $state({
+		align,
+		direction,
+		size,
+		wrap,
+		compact,
+		split,
+		items: [] as string[]
+	});
+	setSpaceContext(context);
+
+	const alignments: Classes<SpaceAlign> = {
 		baseline: '',
 		center: '',
 		end: '',
 		start: ''
 	};
 
-	const sizes: Classes<Size> = {
+	const sizes: Classes<SpaceSize> = {
 		large: 'gap-6',
 		medium: 'gap-4',
 		small: 'gap-2'
@@ -49,9 +51,10 @@
 <div
 	class={[
 		'flex',
-		!number_sizing && sizes[size as Size],
+		!number_sizing && !compact && sizes[size as SpaceSize],
 		align && alignments[align],
-		direction === 'vertical' && 'flex-col'
+		direction === 'vertical' && 'flex-col',
+		wrap && 'flex-wrap'
 	]}
 	style:gap
 >

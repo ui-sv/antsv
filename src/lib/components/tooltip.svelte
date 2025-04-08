@@ -1,30 +1,8 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import Button, { type Props as ButtonProps } from '$lib/components/button.svelte';
+	import Button from './button.svelte';
+	import type { TooltipProps } from './types.js';
 	import { Tooltip } from 'bits-ui';
 	import { isSnippet } from '$lib/index.js';
-	import type { ClassValue } from 'svelte/elements';
-
-	type Align = 'start' | 'end' | 'center' | 'baseline';
-	type Trigger = 'hover' | 'focus' | 'click' | 'contextmenu';
-
-	type Props = {
-		title?: string | Snippet;
-		align?: Align;
-		arrow?: boolean;
-		'arrow-point-center'?: boolean;
-		'auto-adjust-overflow'?: boolean;
-		color?: string;
-		'destroy-on-hide'?: boolean;
-		container?: HTMLElement;
-		children: Snippet;
-		'leave-delay'?: number;
-		'enter-delay'?: number;
-		class?: ClassValue;
-		trigger?: Trigger;
-		type?: 'button';
-		button?: ButtonProps;
-	};
 
 	const {
 		children,
@@ -40,7 +18,7 @@
 		trigger = 'hover',
 		button: btn_prop,
 		type
-	}: Props = $props();
+	}: TooltipProps = $props();
 </script>
 
 <Tooltip.Provider>

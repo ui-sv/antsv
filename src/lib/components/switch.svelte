@@ -1,23 +1,9 @@
 <script lang="ts">
 	import type { Classes } from '$lib/index.js';
 	import { Switch, useId } from 'bits-ui';
-	import type { Snippet } from 'svelte';
+	import type { SwitchProps, SwitchSize } from './types.js';
 	import { LoadingOutlined } from 'svelte-ant-design-icons';
 	import type { ClassValue } from 'svelte/elements';
-
-	type Size = 'small' | 'default';
-
-	type Props = {
-		'auto-focus'?: boolean;
-		value?: boolean;
-		checked?: Snippet;
-		unchecked?: Snippet;
-		loading?: boolean;
-		size?: Size;
-		onchange?: (value: boolean) => void;
-		class?: string | string[];
-		disabled?: boolean;
-	};
 
 	let {
 		checked,
@@ -30,12 +16,12 @@
 		size = 'default',
 		class: klass,
 		...props
-	}: Props = $props();
+	}: SwitchProps = $props();
 
 	let id = useId();
 	let widthie = $state(false);
 
-	const sizes_thumb: Classes<Size> = $derived({
+	const sizes_thumb: Classes<SwitchSize> = $derived({
 		default: [
 			'size-4.5',
 			'data-[state=unchecked]:()',
