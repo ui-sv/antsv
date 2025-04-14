@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { css } from '@emotion/css';
 	import { type Classes, isSnippet } from '$lib/index.js';
 	import { LoadingOutlined } from 'svelte-ant-design-icons';
 	import type {
@@ -7,10 +8,11 @@
 		ButtonProps,
 		ButtonShape,
 		ButtonHTMLType,
-		ButtonIconPosition
+		ButtonIconPosition,
 	} from './types.js';
 	import { Tween } from 'svelte/motion';
 	import { getSpaceContext } from './contexts.js';
+	import type { ClassValue } from 'svelte/elements';
 
 	let {
 		children,
@@ -32,39 +34,40 @@
 	}: ButtonProps = $props();
 	const id = $props.id();
 	let space_context = getSpaceContext();
+	let element = $state() as HTMLElement;
 
-	space_context.items = [...space_context.items, id];
+	// space_context.items = [...space_context.items, id];
 
 	const types: Classes<ButtonType> = {
 		dashed: [
 			'border border-dashed border-zinc-300',
 			'hover:(border-blue-500 text-blue-500)',
-			'active:(border-blue-700 text-blue-700)'
+			'active:(border-blue-700 text-blue-700)',
 		],
 		link: ['text-blue-600', 'hover:(text-blue-500)', 'active:(text-blue-700)'],
 		primary: ['bg-blue-600 text-white', 'hover:(bg-blue-500)', 'active:(bg-blue-700)'],
 		default: [
 			'bg-white border border-zinc-300 shadow-md shadow-black/2',
 			'hover:(border-blue-500 text-blue-500)',
-			'active:(border-blue-700 text-blue-700)'
+			'active:(border-blue-700 text-blue-700)',
 		],
-		text: ['hover:(bg-zinc-200)', 'active:(bg-zinc-300)']
+		text: ['hover:(bg-zinc-200)', 'active:(bg-zinc-300)'],
 	};
 
 	const danger_types: Classes<ButtonType> = {
 		dashed: [
 			'border border-dashed border-red-500 text-red-500',
 			'hover:(border-red-400 text-red-400)',
-			'active:(border-red-600 text-red-600)'
+			'active:(border-red-600 text-red-600)',
 		],
 		link: ['text-red-500', 'hover:(text-red-400)', 'active:(text-red-600)'],
 		primary: ['bg-red-500 text-white', 'hover:(bg-red-400)', 'active:(bg-red-600)'],
 		default: [
 			'bg-white text-red-500 border border-red-500 shadow-md shadow-red-900/2',
 			'hover:(border-red-400 text-red-400)',
-			'active:(border-red-600 text-red-600)'
+			'active:(border-red-600 text-red-600)',
 		],
-		text: ['text-red-500', 'hover:(bg-red-50)', 'active:(bg-red-200)']
+		text: ['text-red-500', 'hover:(bg-red-50)', 'active:(bg-red-200)'],
 	};
 
 	const disabled_types: Classes<ButtonType> = {
@@ -72,23 +75,33 @@
 		link: ['text-zinc-400'],
 		primary: ['bg-zinc-100 text-zinc-400 border border-zinc-300 shadow-md shadow-blue-900/2'],
 		default: ['bg-zinc-100 text-zinc-400 border border-zinc-300  shadow-md shadow-red-900/2'],
-		text: ['text-zinc-400']
+		text: ['text-zinc-400'],
 	};
 
 	const sizes: Classes<ButtonSize> = {
 		default: 'h-8 text-sm',
 		small: 'h-6 text-xs',
-		large: 'h-10'
+		large: 'h-10',
 	};
 
 	const spacing: Classes<ButtonSize> = {
 		default: 'px-3 gap-2',
 		small: 'px-1.5 gap-1.5',
-		large: 'px-3 gap-2'
+		large: 'px-3 gap-2',
 	};
 
 	const padding_left = new Tween(size === 'small' ? 0.5 : 0.75, { duration: 150 });
-	const space_position = $derived(space_context.items.indexOf(id));
+	// const space_position = $derived(space_context.items.indexOf(id));
+	//
+	// space_position < 1 ? 'rounded-r-0' : 'rounded-0',
+	// space_position === space_context.items.length ? 'rounded-l-0' : '',
+	const classes = $derived.by(() => {
+		const result: ClassValue[] = [];
+
+		if (disabled) result.push(disabled_types[type]);
+		else if (danger) result.push(danger_types[type]);
+		else result.push();
+	});
 
 	$effect(() => {
 		if (icon) return;
@@ -103,29 +116,29 @@
 
 <svelte:element
 	this={href ? 'a' : 'button'}
+	bind:this={element}
+	role={html_type}
+	type={html_type}
 	class={[
 		'transition flex items-center relative',
 		disabled ? disabled_types[type] : danger ? danger_types[type] : types[type],
 		sizes[size],
 		icon_position === 'end' && 'flex-row-reverse',
 		icon && !children ? 'aspect-square justify-center px-0' : spacing[size],
-		shape === 'default' ? 'rounded-md' : 'rounded-full',
+		!space_context.compact ? (shape === 'default' ? 'rounded-md' : 'rounded-full') : '',
 		shape === 'circle' && 'aspect-square px-0',
 		loading && 'cursor-wait',
 		disabled && 'cursor-not-allowed',
 		klass,
-		space_position < 1 ? 'rounded-r-0' : 'rounded-0',
-		space_position === space_context.items.length ? 'rounded-l-0' : ''
 	]}
-	role={html_type}
-	type={html_type}
+	style:padding-left="{!icon || (!!icon && children) ? padding_left.current : 0}rem"
+	style:border-radius={shape === 'default' ? '0.375rem' : '9999px'}
 	{href}
 	{target}
 	onclick={(e: MouseEvent) => {
 		if (loading || disabled) return;
 		onclick(e);
 	}}
-	style:padding-left="{!icon || (!!icon && children) ? padding_left.current : 0}rem"
 	{...props}
 >
 	{#if icon}
@@ -157,3 +170,6 @@
 		class={['absolute size-4 pointer-events-none', loading ? 'animate-spin' : 'opacity-0', c]}
 	/>
 {/snippet}
+
+<style>
+</style>

@@ -11,9 +11,10 @@
 		direction = 'horizontal',
 		size = 'small',
 		wrap = false,
-		compact = false
+		compact = false,
 	}: SpaceProps = $props();
 	const id = $props.id();
+	let element = $state() as HTMLDivElement;
 
 	let context = $state({
 		align,
@@ -22,7 +23,7 @@
 		wrap,
 		compact,
 		split,
-		items: [] as string[]
+		items: [] as string[],
 	});
 	setSpaceContext(context);
 
@@ -30,13 +31,13 @@
 		baseline: '',
 		center: '',
 		end: '',
-		start: ''
+		start: '',
 	};
 
 	const sizes: Classes<SpaceSize> = {
 		large: 'gap-6',
 		medium: 'gap-4',
-		small: 'gap-2'
+		small: 'gap-2',
 	};
 
 	const number_sizing = $derived(Array.isArray(size) || typeof size === 'number');
@@ -49,14 +50,26 @@
 </script>
 
 <div
+	bind:this={element}
 	class={[
-		'flex',
+		'ant-space flex',
 		!number_sizing && !compact && sizes[size as SpaceSize],
 		align && alignments[align],
 		direction === 'vertical' && 'flex-col',
-		wrap && 'flex-wrap'
+		wrap && 'flex-wrap',
+		compact && 'compact',
 	]}
-	style:gap
 >
 	{@render children?.()}
 </div>
+
+<!--
+	style:gap -->
+
+<style>
+	:global {
+		.ant-space:where(.compact) > :not(:first-child) {
+			margin-left: -1px;
+		}
+	}
+</style>

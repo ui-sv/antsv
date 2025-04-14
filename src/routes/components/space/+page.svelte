@@ -18,7 +18,15 @@
 			<Button>default</Button>
 		{/each}
 	</Space>
-	<Space compact>{@render base_buttons()}</Space>
+	<Space compact>
+		{@render base_buttons()}
+	</Space>
+	<Space compact>
+		<Button type="default">default</Button>
+		<Button type="default">default</Button>
+		<Button type="default">default</Button>
+		<Button type="default">default</Button>
+	</Space>
 </Space>
 
 {#snippet base_buttons()}
